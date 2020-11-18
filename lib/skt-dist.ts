@@ -10,52 +10,46 @@ import * as ecrAsset from '@aws-cdk/aws-ecr-assets';
 import { CfnOutput, Duration, StackProps, CfnParameter} from '@aws-cdk/core';
 import { ListenerAction, ListenerCertificate, ListenerCondition } from '@aws-cdk/aws-elasticloadbalancingv2';
 
-export class PetclinicMicroservicesEcsStack extends cdk.Stack {
+export class SktDistStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // The code that defines your stack goes here
 
-//     const vpcId = new CfnParameter(this, "vpcId", {
-//       type: "String",
-//       description: "VPC ID where the cluter exists"
-//   });
+    const vpcId = new CfnParameter(this, "vpcId", {
+      type: "String",
+      description: "VPC ID where the cluter exists"
+  });
 
-//   const publicSubnet1 = new CfnParameter(this, "publicSubnet1", {
-//       type: "String",
-//       description: "Subnet ID of Public Subnet"
-//   });
-//   const publicSubnet2 = new CfnParameter(this, "publicSubnet2", {
-//       type: "String",
-//       description: "Subnet ID of Public Subnet"
-//   });
-//   const privateSubnet1 = new CfnParameter(this, "privateSubnet1", {
-//       type: "String",
-//       description: "Subnet ID of private Subnet"
-//   });
-//   const privateSubnet2 = new CfnParameter(this, "privateSubnet2", {
-//       type: "String",
-//       description: "Subnet ID of Public Subnet"
-//   });
+  const publicSubnet1 = new CfnParameter(this, "publicSubnet1", {
+      type: "String",
+      description: "Subnet ID of Public Subnet"
+  });
+  const publicSubnet2 = new CfnParameter(this, "publicSubnet2", {
+      type: "String",
+      description: "Subnet ID of Public Subnet"
+  });
+  const privateSubnet1 = new CfnParameter(this, "privateSubnet1", {
+      type: "String",
+      description: "Subnet ID of private Subnet"
+  });
+  const privateSubnet2 = new CfnParameter(this, "privateSubnet2", {
+      type: "String",
+      description: "Subnet ID of Public Subnet"
+  });
 
-//   const rdsEndpointUrl = new CfnParameter(this, 'rds-endpoint', {
-//     type: 'String',
-//     description: 'RDS Endpoint'
-//   })
-  
-//   const existingVpc = ec2.Vpc.fromVpcAttributes(this, 'existing-vpc', {
-//     vpcId: vpcId.valueAsString,
-//     availabilityZones: ['ap-northeast-2a','ap-northeast-2b'],
-//     publicSubnetIds: [publicSubnet1.valueAsString, publicSubnet2.valueAsString],
-//     privateSubnetIds: [privateSubnet1.valueAsString, privateSubnet2.valueAsString]
-// })
+  const rdsEndpointUrl = new CfnParameter(this, 'rds-endpoint', {
+    type: 'String',
+    description: 'RDS Endpoint'
+  })
 
   const vpc = ec2.Vpc.fromVpcAttributes(this, 'existing-vpc', {
-    vpcId: 'vpc-083d398833449025a',
+    vpcId: vpcId.valueAsString,
     availabilityZones: ['ap-northeast-2a','ap-northeast-2b'],
-    publicSubnetIds: ['subnet-0a624ebf2ebce51d3', 'subnet-01d55e8ae53208672'],
-    privateSubnetIds: ['subnet-0a7dbd7abf319e80d', 'subnet-08586d046f98d561c']
-  })
+    publicSubnetIds: [publicSubnet1.valueAsString, publicSubnet2.valueAsString],
+    privateSubnetIds: [privateSubnet1.valueAsString, privateSubnet2.valueAsString]
+})
+
 
   const cluster = new ecs.Cluster(this, 'skt-poc-cluster',{
     containerInsights: true,
@@ -106,7 +100,7 @@ export class PetclinicMicroservicesEcsStack extends cdk.Stack {
         'SPRING_DATASOURCE_PASSWORD': 'petclinic',
         'SPRING_DATASOURCE_USERNAME': 'root',
         'SPRING_PROFILES_ACTIVE': 'mysql',
-        'SPRING_DATASOURCE_URL': 'jdbc:mysql://petclinic-eks.cluster-cg6qxgkzai8i.ap-northeast-2.rds.amazonaws.com:3306/petclinic?useUnicode=true',
+        'SPRING_DATASOURCE_URL': `jdbc:mysql://${rdsEndpointUrl.valueAsString}:3306/petclinic?useUnicode=true`,
         'SERVER_SERVLET_CONTEXT_PATH': `/api/${s.slice(0, -1)}`
       }
     }
