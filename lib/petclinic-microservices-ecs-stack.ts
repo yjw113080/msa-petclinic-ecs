@@ -14,41 +14,6 @@ export class PetclinicMicroservicesEcsStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
-
-//     const vpcId = new CfnParameter(this, "vpcId", {
-//       type: "String",
-//       description: "VPC ID where the cluter exists"
-//   });
-
-//   const publicSubnet1 = new CfnParameter(this, "publicSubnet1", {
-//       type: "String",
-//       description: "Subnet ID of Public Subnet"
-//   });
-//   const publicSubnet2 = new CfnParameter(this, "publicSubnet2", {
-//       type: "String",
-//       description: "Subnet ID of Public Subnet"
-//   });
-//   const privateSubnet1 = new CfnParameter(this, "privateSubnet1", {
-//       type: "String",
-//       description: "Subnet ID of private Subnet"
-//   });
-//   const privateSubnet2 = new CfnParameter(this, "privateSubnet2", {
-//       type: "String",
-//       description: "Subnet ID of Public Subnet"
-//   });
-
-//   const rdsEndpointUrl = new CfnParameter(this, 'rds-endpoint', {
-//     type: 'String',
-//     description: 'RDS Endpoint'
-//   })
-  
-//   const existingVpc = ec2.Vpc.fromVpcAttributes(this, 'existing-vpc', {
-//     vpcId: vpcId.valueAsString,
-//     availabilityZones: ['ap-northeast-2a','ap-northeast-2b'],
-//     publicSubnetIds: [publicSubnet1.valueAsString, publicSubnet2.valueAsString],
-//     privateSubnetIds: [privateSubnet1.valueAsString, privateSubnet2.valueAsString]
-// })
 
   const vpc = ec2.Vpc.fromVpcAttributes(this, 'existing-vpc', {
     vpcId: 'vpc-083d398833449025a',
@@ -91,12 +56,7 @@ export class PetclinicMicroservicesEcsStack extends cdk.Stack {
 
   for (var i in components) {
     let s = components[i];
-    // let asset = new ecrAsset.DockerImageAsset(this, `spring-petclinic-${s}`, {
-    //   directory: `./work/build/spring-petclinc-${s}-service`,
-    //   buildArgs: {
-    //     JAR_FILE: `spring-petclinic-${s}-service-2.1.4.jar`
-    //   }
-    // });
+
 
     let td = new ecs.Ec2TaskDefinition(this, `td-${s}`);
     let env = {}
@@ -106,7 +66,7 @@ export class PetclinicMicroservicesEcsStack extends cdk.Stack {
         'SPRING_DATASOURCE_PASSWORD': 'petclinic',
         'SPRING_DATASOURCE_USERNAME': 'root',
         'SPRING_PROFILES_ACTIVE': 'mysql',
-        'SPRING_DATASOURCE_URL': 'jdbc:mysql://petclinic-eks.cluster-cg6qxgkzai8i.ap-northeast-2.rds.amazonaws.com:3306/petclinic?useUnicode=true',
+        'SPRING_DATASOURCE_URL': 'jdbc:mysql://<<DB_URL>>:3306/petclinic?useUnicode=true',
         'SERVER_SERVLET_CONTEXT_PATH': `/api/${s.slice(0, -1)}`
       }
     }

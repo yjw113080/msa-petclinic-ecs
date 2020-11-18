@@ -10,7 +10,7 @@ import * as ecrAsset from '@aws-cdk/aws-ecr-assets';
 import { CfnOutput, Duration, StackProps, CfnParameter} from '@aws-cdk/core';
 import { ListenerAction, ListenerCertificate, ListenerCondition } from '@aws-cdk/aws-elasticloadbalancingv2';
 
-export class SktDistStack extends cdk.Stack {
+export class DistStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -51,7 +51,7 @@ export class SktDistStack extends cdk.Stack {
 })
 
 
-  const cluster = new ecs.Cluster(this, 'skt-poc-cluster',{
+  const cluster = new ecs.Cluster(this, 'poc-cluster',{
     containerInsights: true,
     vpc
   });
@@ -77,9 +77,14 @@ export class SktDistStack extends cdk.Stack {
     vpc: cluster.vpc,
     internetFacing: true
   });
+
+  new CfnOutput(this, 'elb-url', {
+    exportName: 'ecslb',
+    value: lb.loadBalancerDnsName
+  })
   const listener = lb.addListener('default', { port: 80 });
 
-  const ecsLogGroup = new logs.LogGroup(this, 'skt-ecs-poc-log-group');
+  const ecsLogGroup = new logs.LogGroup(this, 'ecs-poc-log-group');
 
   let components: Array<string> = ['customers', 'vets', 'visits', 'static'];
 
