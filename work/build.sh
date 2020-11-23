@@ -44,7 +44,7 @@ cp work/source/code/VisitsServiceApplication.java work/build/spring-petclinic-vi
 cp work/source/code/VetsServiceApplication.java work/build/spring-petclinic-vets-service/src/main/java/org/springframework/samples/petclinic/vets/
 cp work/source/code/owner-details.controller.js work/build/spring-petclinic-static-service/src/main/resources/static/scripts/owner-details/
 
-find work/build/spring-petclinic-static-service/src/main/java/org/springframework/samples/petclinic/api/ -mindepth 1 -maxdepth 1 -type d -exec rm -r "{}" \;
+#find work/build/spring-petclinic-static-service/src/main/java/org/springframework/samples/petclinic/api/ -mindepth 1 -maxdepth 1 -type d -exec rm -r "{}" \;
 find work/build/spring-petclinic-static-service/src/test/java/org/springframework/samples/petclinic/api/ -mindepth 1 -maxdepth 1 -type d -exec rm -r "{}" \;
 
 cd work/build && ./mvnw package 

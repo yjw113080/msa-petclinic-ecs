@@ -51,6 +51,13 @@
         </dependency>
 
         <!-- Third parties -->
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-circuitbreaker-reactor-resilience4j -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>
+            <version>1.0.4.RELEASE</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.jolokia</groupId>
